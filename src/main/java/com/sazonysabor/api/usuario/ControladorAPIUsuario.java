@@ -25,21 +25,16 @@ public class ControladorAPIUsuario {
 	@Autowired
 	private ServicioUsuario servicio;
 	
+	@Autowired
+    private MapaUsuario mapa;
+	
 	@GetMapping
 	public ResponseEntity<List<DTOUsuarioRes>> obtenerTodos() {
 		List<EntidadUsuario> usuarios = servicio.obtenerTodos();
 		if (usuarios.size() == 0) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-		
 		List<DTOUsuarioRes> res = usuarios.stream()
-			.map(usuario -> new DTOUsuarioRes(
-					usuario.getId(), 
-					usuario.getNombre(), 
-					usuario.getCorreo(), 
-					usuario.getContrasena(), 
-					usuario.getTelefono()
-			))
+			.map(mapa::obtenerRespuesta)
 			.collect(Collectors.toList());
-		
 		return new ResponseEntity<>(res, HttpStatus.OK);
 	}
 	
@@ -47,34 +42,15 @@ public class ControladorAPIUsuario {
 	public ResponseEntity<DTOUsuarioRes> obtenerUno(@PathVariable("id") Long id) {
 		EntidadUsuario usuario = servicio.obtenerUno(id);
 		if (usuario == null) return ResponseEntity.notFound().build();
-		
-		DTOUsuarioRes res = new DTOUsuarioRes(
-			usuario.getId(), 
-			usuario.getNombre(), 
-			usuario.getCorreo(), 
-			usuario.getContrasena(), 
-			usuario.getTelefono()
-		);
-		
+		DTOUsuarioRes res = mapa.obtenerRespuesta(usuario);
 		return new ResponseEntity<>(res, HttpStatus.OK);
 	}
 	
 	@PostMapping
 	public ResponseEntity<DTOUsuarioRes> crear(@RequestBody DTOUsuarioReq req) {
-		EntidadUsuario usuario = new EntidadUsuario(
-			null, req.getNombre(), req.getCorreo(), req.getContrasena(), req.getTelefono()
-		);
-		
+		EntidadUsuario usuario = mapa.obtenerEntidad(req);
 		EntidadUsuario nuevoUsuario = servicio.guardar(usuario);
-		
-		DTOUsuarioRes res = new DTOUsuarioRes(
-			nuevoUsuario.getId(), 
-			nuevoUsuario.getNombre(), 
-			nuevoUsuario.getCorreo(), 
-			nuevoUsuario.getContrasena(), 
-			nuevoUsuario.getTelefono()
-		);
-		
+		DTOUsuarioRes res = mapa.obtenerRespuesta(nuevoUsuario);
 		return new ResponseEntity<>(res, HttpStatus.CREATED);
 	}
 	
@@ -84,22 +60,9 @@ public class ControladorAPIUsuario {
 	) {
 		EntidadUsuario usuario = servicio.obtenerUno(id);
 		if(usuario == null) return ResponseEntity.notFound().build();
-		
-		usuario.setNombre(req.getNombre());
-		usuario.setCorreo(req.getCorreo());
-		usuario.setContrasena(req.getContrasena());
-		usuario.setTelefono(req.getTelefono());
-		
+		usuario = mapa.actualizarEntidad(usuario, req);
 		EntidadUsuario usuarioActualizado = servicio.guardar(usuario);
-		
-		DTOUsuarioRes res = new DTOUsuarioRes(
-			usuarioActualizado.getId(), 
-			usuarioActualizado.getNombre(), 
-			usuarioActualizado.getCorreo(), 
-			usuarioActualizado.getContrasena(), 
-			usuarioActualizado.getTelefono()
-		);
-		
+		DTOUsuarioRes res = mapa.obtenerRespuesta(usuarioActualizado);
 		return new ResponseEntity<>(res, HttpStatus.OK);
 	}
 	
@@ -109,41 +72,15 @@ public class ControladorAPIUsuario {
 	) {
 		EntidadUsuario usuario = servicio.obtenerUno(id);
 		if(usuario == null) return ResponseEntity.notFound().build();
-		
-		campos.forEach((clave, valor) -> {
-			switch(clave) {
-				case "nombre": 
-					usuario.setNombre((String) valor);
-					break;
-				case "correo":
-					usuario.setCorreo((String) valor);
-					break;
-				case "contrasena":
-					usuario.setContrasena((String) valor);
-					break;
-				case "telefono":
-					usuario.setTelefono((String) valor);
-					break;
-			}
-		});
-		
+		usuario = mapa.actualizarParcialEntidad(usuario, campos);
 		EntidadUsuario usuarioActualizado = servicio.guardar(usuario);
-		
-		DTOUsuarioRes res = new DTOUsuarioRes(
-			usuarioActualizado.getId(), 
-			usuarioActualizado.getNombre(), 
-			usuarioActualizado.getCorreo(), 
-			usuarioActualizado.getContrasena(), 
-			usuarioActualizado.getTelefono()
-		);
-		
+		DTOUsuarioRes res = mapa.obtenerRespuesta(usuarioActualizado);
 		return new ResponseEntity<>(res, HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> eliminar(@PathVariable("id") Long id) {
 		if(servicio.obtenerUno(id) == null) return ResponseEntity.notFound().build();
-		
 		servicio.eliminar(id);
 		return ResponseEntity.noContent().build();
 	}
