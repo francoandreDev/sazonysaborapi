@@ -3,6 +3,7 @@ package com.sazonysabor.api.usuario;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sazonysabor.api.comentario.EntidadComentario;
 
@@ -29,6 +30,7 @@ public class EntidadUsuario {
 	private String telefono;
 	// inversion relation with comments table
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<EntidadComentario> comentarios = new ArrayList<>();
 	// constructors
 	public EntidadUsuario() {

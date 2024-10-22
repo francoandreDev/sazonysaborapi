@@ -2,6 +2,7 @@ package com.sazonysabor.api.comentario;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.sazonysabor.api.usuario.EntidadUsuario;
 
 import jakarta.persistence.Entity;
@@ -23,6 +24,7 @@ public class EntidadComentario {
 	private LocalDateTime fecha;
 	@ManyToOne
 	@JoinColumn(name = "usuario_id", nullable = false)
+	@JsonBackReference
 	private EntidadUsuario usuario;
 	// constructores
 	public EntidadComentario() {	
