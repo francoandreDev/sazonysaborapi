@@ -9,7 +9,6 @@ public class MapaUsuario {
 	// EntidadUsuario -> DTOUsuarioRes
 	public DTOUsuarioRes obtenerRespuesta(EntidadUsuario usuario) {
 		if(usuario == null) return null;
-		
 		return new DTOUsuarioRes(
 			usuario.getId(), 
 			usuario.getNombre(), 
@@ -19,11 +18,9 @@ public class MapaUsuario {
 			usuario.getComentarios()
 		);
 	}
-	
 	// DTOUsuarioReq -> EntidadUsuario
 	public EntidadUsuario obtenerEntidad(DTOUsuarioReq req) {
 		if (req == null) return null;
-		
 		return new EntidadUsuario(
 			null, 
 			req.getNombre(), 
@@ -32,8 +29,7 @@ public class MapaUsuario {
 			req.getTelefono()
 		);
 	}
-	
-	// update EntidadUsuario with DTOUsuarioReq
+	// EntidadUsuario <= DTOUsuarioReq
 	public EntidadUsuario actualizarEntidad(EntidadUsuario usuario, DTOUsuarioReq req) {
 		usuario.setNombre(req.getNombre());
 		usuario.setCorreo(req.getCorreo());
@@ -41,8 +37,7 @@ public class MapaUsuario {
 		usuario.setTelefono(req.getTelefono());
 		return usuario;
 	}
-	
-	// partial update EntidadUsuario
+	// EntidadUsuario <- DTOUsuarioReq
 	public EntidadUsuario actualizarParcialEntidad(EntidadUsuario usuario, Map<String, Object> campos) {
 		campos.forEach((clave, valor) -> {
 			switch(clave) {
@@ -59,6 +54,7 @@ public class MapaUsuario {
 					usuario.setTelefono((String) valor);
 					break;
 			}
+			// the comments don't be updated here
 		});
 		return usuario;
 	}

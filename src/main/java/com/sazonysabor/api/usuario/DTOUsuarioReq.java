@@ -19,7 +19,7 @@ public class DTOUsuarioReq {
 		this.contrasena = contrasena;
 		this.telefono = telefono;
 	}
-	// getters y setters
+	// getters and setters
 	public String getCorreo() {
 		return correo;
 	}

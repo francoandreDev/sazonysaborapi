@@ -24,20 +24,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class ControladorAPIUsuario {
 	@Autowired
 	private ServicioUsuario servicio;
-	
 	@Autowired
     private MapaUsuario mapa;
-	
 	@GetMapping
 	public ResponseEntity<List<DTOUsuarioRes>> obtenerTodos() {
 		List<EntidadUsuario> usuarios = servicio.obtenerTodos();
-		if (usuarios.size() == 0) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		if (usuarios.size() == 0) return ResponseEntity.noContent().build();
 		List<DTOUsuarioRes> res = usuarios.stream()
 			.map(mapa::obtenerRespuesta)
 			.collect(Collectors.toList());
 		return new ResponseEntity<>(res, HttpStatus.OK);
 	}
-	
 	@GetMapping("/{id}")
 	public ResponseEntity<DTOUsuarioRes> obtenerUno(@PathVariable("id") Long id) {
 		EntidadUsuario usuario = servicio.obtenerUno(id);
@@ -45,7 +42,6 @@ public class ControladorAPIUsuario {
 		DTOUsuarioRes res = mapa.obtenerRespuesta(usuario);
 		return new ResponseEntity<>(res, HttpStatus.OK);
 	}
-	
 	@PostMapping
 	public ResponseEntity<DTOUsuarioRes> crear(@RequestBody DTOUsuarioReq req) {
 		EntidadUsuario usuario = mapa.obtenerEntidad(req);
@@ -53,7 +49,6 @@ public class ControladorAPIUsuario {
 		DTOUsuarioRes res = mapa.obtenerRespuesta(nuevoUsuario);
 		return new ResponseEntity<>(res, HttpStatus.CREATED);
 	}
-	
 	@PutMapping("/{id}")
 	public ResponseEntity<DTOUsuarioRes> reemplazar(
 		@PathVariable("id") Long id, @RequestBody DTOUsuarioReq req
@@ -65,7 +60,6 @@ public class ControladorAPIUsuario {
 		DTOUsuarioRes res = mapa.obtenerRespuesta(usuarioActualizado);
 		return new ResponseEntity<>(res, HttpStatus.OK);
 	}
-	
 	@PatchMapping("/{id}")
 	public ResponseEntity<DTOUsuarioRes> actualizar(
 		@PathVariable("id") Long id, @RequestBody Map<String, Object> campos
@@ -77,14 +71,12 @@ public class ControladorAPIUsuario {
 		DTOUsuarioRes res = mapa.obtenerRespuesta(usuarioActualizado);
 		return new ResponseEntity<>(res, HttpStatus.OK);
 	}
-	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> eliminar(@PathVariable("id") Long id) {
 		if(servicio.obtenerUno(id) == null) return ResponseEntity.notFound().build();
 		servicio.eliminar(id);
 		return ResponseEntity.noContent().build();
 	}
-	
 	@RequestMapping(method = RequestMethod.OPTIONS)
 	public ResponseEntity<String> verMetodos() {
 		HttpHeaders encabezados = new HttpHeaders();

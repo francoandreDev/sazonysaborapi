@@ -1,6 +1,6 @@
 package com.sazonysabor.api.comentario;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import com.sazonysabor.api.usuario.EntidadUsuario;
 
@@ -20,14 +20,14 @@ public class EntidadComentario {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String contenido;
-	private Date fecha;
+	private LocalDateTime fecha;
 	@ManyToOne
 	@JoinColumn(name = "usuario_id", nullable = false)
 	private EntidadUsuario usuario;
 	// constructores
 	public EntidadComentario() {	
 	}
-	public EntidadComentario(Long id, String contenido, Date fecha, EntidadUsuario usuario) {
+	public EntidadComentario(Long id, String contenido, LocalDateTime fecha, EntidadUsuario usuario) {
 		this.id = id;
 		this.contenido = contenido;
 		this.fecha = fecha;
@@ -46,10 +46,10 @@ public class EntidadComentario {
 	public void setContenido(String contenido) {
 		this.contenido = contenido;
 	}
-	public Date getFecha() {
+	public LocalDateTime getFecha() {
 		return fecha;
 	}
-	public void setFecha(Date fecha) {
+	public void setFecha(LocalDateTime fecha) {
 		this.fecha = fecha;
 	}
 	public EntidadUsuario getUsuario() {

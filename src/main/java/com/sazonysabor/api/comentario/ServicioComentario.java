@@ -1,4 +1,4 @@
-package com.sazonysabor.api.usuario;
+package com.sazonysabor.api.comentario;
 
 import java.util.List;
 
@@ -6,20 +6,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ServicioUsuario implements IServicioUsuario{
+public class ServicioComentario implements IServicioComentario {
 	@Autowired
-	private IRepositorioUsuario repositorio;
+	private IRepositorioComentario repositorio;
 	@Override
-	public List<EntidadUsuario> obtenerTodos() {
+	public List<EntidadComentario> obtenerTodos() {
 		return repositorio.findAll();
 	}
 	@Override
-	public EntidadUsuario obtenerUno(Long id) {
+	public EntidadComentario obtenerUno(Long id) {
 		return repositorio.findById(id).orElse(null);
 	}
 	@Override
-	public EntidadUsuario guardar(EntidadUsuario usuario) {
-		return repositorio.save(usuario);
+	public EntidadComentario guardar(EntidadComentario comentario) {
+		return repositorio.save(comentario);
 	}
 	@Override
 	public void eliminar(Long id) {
