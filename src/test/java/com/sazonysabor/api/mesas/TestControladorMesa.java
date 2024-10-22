@@ -1,7 +1,13 @@
-package com.sazonysabor.api.usuarios;
+package com.sazonysabor.api.mesas;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.options;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +23,10 @@ import jakarta.transaction.Transactional;
 @AutoConfigureMockMvc
 @Transactional
 @Rollback
-public class TestControladorUsuario {
+public class TestControladorMesa {
 	@Autowired
 	private MockMvc mockMvc;
-	private String rutaBase = "/api/v1/usuarios";
+	private String rutaBase = "/api/v1/mesas";
     @Test
     public void testObtenerTodos() throws Exception {
         mockMvc.perform(get(rutaBase)
@@ -35,35 +41,30 @@ public class TestControladorUsuario {
     }
     @Test
     public void testCrear() throws Exception {
-        String nuevoUsuario = "{"
-        		+ "\"correo\": \"newuser@gmail.com\","
-        		+ "\"nombre\": \"Nuevo Usuario\","
-        		+ "\"contrasena\": \"Password123\","
-        		+ "\"telefono\": \"+51 912 345 678\""
+        String nuevaMesa = "{"
+        		+ "\"capacidad\": 5,"
+        		+ "\"estado\": true"
         		+ "}";
         mockMvc.perform(post(rutaBase)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(nuevoUsuario))
+                .content(nuevaMesa))
                 .andExpect(status().isCreated());
     }
     @Test
     public void testReemplazar() throws Exception {
-        String usuarioActualizado = "{"
-        		+ "\"correo\": \"update@gmail.com\","
-        		+ "\"nombre\": \"Usuario Actualizado\","
-        		+ "\"contrasena\": \"Password123\","
-        		+ "\"telefono\": \"+51 987 654 321\""
+        String mesaActualizada = "{"
+        		+ "\"capacidad\": 10,"
+        		+ "\"estado\": false"
         		+ "}";
         mockMvc.perform(put(rutaBase + "/{id}", 1)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(usuarioActualizado))
+                .content(mesaActualizada))
                 .andExpect(status().isOk());
     }
     @Test
     public void testActualizar() throws Exception {
         String camposActualizados = "{"
-        		+ "\"nombre\": \"Nombre Actualizado\", "
-        		+ "\"telefono\": \"+51 912 345 678\""
+        		+ "\"estado\": true"
         		+ "}";
         mockMvc.perform(patch(rutaBase + "/{id}", 1)
                 .contentType(MediaType.APPLICATION_JSON)
